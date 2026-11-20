@@ -8,6 +8,34 @@ const APP_VERSION: string = import.meta.env.VITE_APP_VERSION ?? "1.0.0";
 const STORAGE_KEY = "tugas-kuliah";
 const FILTERS: Filter[] = ["Semua", "Belum Selesai", "Selesai"]; // Array
 
+// ---- Jadwal kuliah ----
+type Hari = "Senin" | "Selasa" | "Rabu" | "Kamis" | "Jumat"; // union type
+
+interface JadwalKuliah {
+  matkul: string;
+  ruang: string;
+  hari: Hari;
+  jam: string;
+}
+
+const URUTAN_HARI: Hari[] = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat"];
+
+const JADWAL: JadwalKuliah[] = [
+  { matkul: "Manajemen Basis Data", ruang: "R 4.09", hari: "Senin", jam: "07:00-09:30" },
+  { matkul: "Jaringan Komputer", ruang: "R 4.10", hari: "Kamis", jam: "07:00-09:30" },
+  { matkul: "Pengembangan Aplikasi Web", ruang: "Gedung R.3.9", hari: "Jumat", jam: "09:30-12:00" },
+  { matkul: "Interaksi Manusia dan Komputer", ruang: "R 4.01", hari: "Rabu", jam: "09:30-12:00" },
+  { matkul: "Intelegensia Buatan", ruang: "R 4.10", hari: "Selasa", jam: "12:40-15:10" },
+  { matkul: "Manajemen Proyek Perangkat Lunak", ruang: "R 4.01", hari: "Senin", jam: "09:30-12:00" },
+  { matkul: "Pengembangan Aplikasi Mobile", ruang: "R 4.12", hari: "Kamis", jam: "12:40-15:10" },
+];
+
+// Urutkan berdasarkan hari, lalu jam, dan buat baris tabel
+const jadwalRows: string = [...JADWAL]
+  .sort((a, b) => URUTAN_HARI.indexOf(a.hari) - URUTAN_HARI.indexOf(b.hari) || a.jam.localeCompare(b.jam))
+  .map((j) => `<tr><td>${j.matkul}</td><td>${j.ruang}</td><td>${j.hari} ${j.jam}</td></tr>`)
+  .join("");
+
 // ---- State ----
 let tasks: Task[] = loadData<Task[]>(STORAGE_KEY, []);
 let nextId: number = Math.max(0, ...tasks.map((t) => t.id)) + 1; // number
@@ -45,6 +73,18 @@ app.innerHTML = `
 
     <nav class="filters" id="filters" aria-label="Filter status"></nav>
     <ul class="list" id="list"></ul>
+
+    <section class="schedule">
+      <h2>Jadwal kuliah</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Nama Matkul</th><th>Ruang Kelas</th><th>Jadwal Kuliah</th></tr>
+          </thead>
+          <tbody>${jadwalRows}</tbody>
+        </table>
+      </div>
+    </section>
 
     <footer class="muted foot">v${APP_VERSION}</footer>
   </main>

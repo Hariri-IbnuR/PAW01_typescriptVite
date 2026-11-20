@@ -1,4 +1,4 @@
-# Daftar Tugas Kuliah
+git# Daftar Tugas Kuliah
 
 Aplikasi web sederhana (Vite + TypeScript) untuk mengelola tugas kuliah. Data disimpan di `localStorage` browser.
 
