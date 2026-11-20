@@ -1,4 +1,4 @@
-import ".style.css";
+import "./style.css";
 import type { Task, Filter, TaskInput } from "./types";
 import { loadData, saveData, removeById } from "./storage";
 
