@@ -34,9 +34,7 @@ cd tugas-kuliah && npm install
 
 - Vite hanya mengekspos variabel berawalan `VITE_` ke browser. Nilainya **tertanam di JavaScript hasil build dan bisa dilihat siapa saja**.
 - Karena itu `.env` hanya berisi konfigurasi non-rahasia (`VITE_APP_NAME`, `VITE_APP_VERSION`).
-- Password / API key **jangan** diberi awalan `VITE_` dan jangan dipakai di kode frontend; simpan di backend.
-- `.env` sudah masuk `.gitignore` sehingga tidak ikut ke GitHub. `.env.example` yang di-commit sebagai contoh.
-- Jika `.env` sempat ter-commit: hapus dari Git (`git rm --cached .env`) dan ganti semua kunci yang bocor.
+ 
 
 ## Contoh fitur TypeScript
 
