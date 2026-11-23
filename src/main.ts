@@ -36,6 +36,10 @@ const jadwalRows: string = [...JADWAL]
   .map((j) => `<tr><td>${j.matkul}</td><td>${j.ruang}</td><td>${j.hari} ${j.jam}</td></tr>`)
   .join("");
 
+// Opsi dropdown: nama matkul unik dari jadwal (Set -> array), urut abjad
+const matkulList: string[] = [...new Set(JADWAL.map((j) => j.matkul))].sort((a, b) => a.localeCompare(b, "id"));
+const matkulOptions: string = matkulList.map((m) => `<option value="${m}">${m}</option>`).join("");
+
 // ---- State ----
 let tasks: Task[] = loadData<Task[]>(STORAGE_KEY, []);
 let nextId: number = Math.max(0, ...tasks.map((t) => t.id)) + 1; // number
@@ -59,7 +63,10 @@ app.innerHTML = `
       </label>
       <div class="row">
         <label>Mata kuliah
-          <input name="course" required maxlength="50" placeholder="Contoh: Basis Data" />
+          <select name="course" required>
+            <option value="" selected disabled>Pilih mata kuliah</option>
+            ${matkulOptions}
+          </select>
         </label>
         <label>Tenggat
           <input name="deadline" type="date" required />
@@ -204,7 +211,13 @@ listEl.addEventListener("click", (e) => {
       editingId = id;
       isFormOpen = true;
       (form.elements.namedItem("title") as HTMLInputElement).value = task.title;
-      (form.elements.namedItem("course") as HTMLInputElement).value = task.course;
+      const courseSelect = form.elements.namedItem("course") as HTMLSelectElement;
+      courseSelect.value = task.course;
+      if (courseSelect.value !== task.course) {
+        // Tugas lama dengan matkul yang tidak ada di jadwal: tetap bisa diedit
+        courseSelect.add(new Option(task.course, task.course));
+        courseSelect.value = task.course;
+      }
       (form.elements.namedItem("deadline") as HTMLInputElement).value = task.deadline;
       $("#form-title").textContent = "Edit tugas";
       $("#submit-btn").textContent = "Simpan perubahan";
